@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --error: #ef4444;
+            --input-border: #d1d5db;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            color: var(--text-main);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            margin: 0 0 0.5rem;
+            font-size: 1.875rem;
+            font-weight: 700;
+            text-align: center;
+            color: var(--primary);
+        }
+
+        p.subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--input-border);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: all 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            min-height: 1rem;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.875rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            margin-top: 1rem;
+        }
+
+        button:hover {
+            background: var(--primary-hover);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .nav-link {
+            display: block;
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h2>Join Us</h2>
+            <p class="subtitle">Complete the form to get started.</p>
+
+            <form id="registrationForm" action="/submit" method="POST">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" 
+                           placeholder="John Doe" 
+                           value="<%= values.name || '' %>">
+                    <div id="nameError" class="error-message"><%= errors.name || '' %></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" 
+                           placeholder="john@example.com"
+                           value="<%= values.email || '' %>">
+                    <div id="emailError" class="error-message"><%= errors.email || '' %></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="age">Age</label>
+                    <input type="number" id="age" name="age" 
+                           placeholder="18+"
+                           value="<%= values.age || '' %>">
+                    <div id="ageError" class="error-message"><%= errors.age || '' %></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" 
+                           placeholder="At least 6 characters">
+                    <div id="passwordError" class="error-message"><%= errors.password || '' %></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" 
+                           placeholder="Re-enter password">
+                    <div id="confirmPasswordError" class="error-message"><%= errors.confirmPassword || '' %></div>
+                </div>
+
+                <button type="submit">Create Account</button>
+            </form>
+
+            <a href="/data" class="nav-link">View Submissions</a>
+        </div>
+    </div>
+
+    <!-- Inline JavaScript for Client-Side Validation -->
+    <script>
+        const form = document.getElementById('registrationForm');
+        
+        form.addEventListener('submit', function(e) {
+            let isValid = true;
+            
+            // Clear previous errors
+            document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+
+            // Name validation
+            const name = document.getElementById('name').value.trim();
+            if (name.length < 3) {
+                document.getElementById('nameError').textContent = 'Name must be at least 3 characters.';
+                isValid = false;
+            }
+
+            // Email validation
+            const email = document.getElementById('email').value.trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                document.getElementById('emailError').textContent = 'Please enter a valid email.';
+                isValid = false;
+            }
+
+            // Age validation
+            const age = document.getElementById('age').value;
+            if (!age || age < 18) {
+                document.getElementById('ageError').textContent = 'You must be 18 or older.';
+                isValid = false;
+            }
+
+            // Password validation
+            const password = document.getElementById('password').value;
+            if (password.length < 6) {
+                document.getElementById('passwordError').textContent = 'Password must be at least 6 characters.';
+                isValid = false;
+            }
+
+            // Confirm Password validation
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            if (password !== confirmPassword) {
+                document.getElementById('confirmPasswordError').textContent = 'Passwords do not match.';
+                isValid = false;
+            }
+
+            if (!isValid) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>
