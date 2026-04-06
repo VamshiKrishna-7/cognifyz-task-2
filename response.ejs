@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+</head>
+<body>
+    <div class="container">
+        <h1>Thanks, <%= name.split(' ')[0] %>!</h1>
+        <p>We've successfully received your submission. Here are the details:</p>
+
+        <section class="result-card">
+            <div class="result-item">
+                <div class="result-label">Full Name</div>
+                <div class="result-value"><%= name %></div>
+            </div>
+
+            <div class="result-item">
+                <div class="result-label">Email</div>
+                <div class="result-value"><%= email %></div>
+            </div>
+
+            <div class="result-item">
+                <div class="result-label">Your Message</div>
+                <div class="result-value"><%= message %></div>
+            </div>
+        </section>
+
+        <a href="/" class="back-link">← Submit another response</a>
+    </div>
+</body>
+</html>
